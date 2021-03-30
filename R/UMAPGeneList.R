@@ -1,24 +1,32 @@
+#' Generate individual FeaturePlots for given list of genes
+#' 
+#' @param seurat_object seurat object
+#' @param gene_list array of genes to plot
+#' @param plot_path path to plot FeaturePlots to
+#' @param zip_files boolean for whether or not to zip plots
 #' @export
-UMAPGeneList <- function(data, gene.list, plot.path){
-  plot.path = plot.path
-  dir.create(plot.path, recursive = TRUE)
+UMAPGeneList <- function(seurat_object, gene_list, plot_path, zip_files = TRUE){
+  dir.create(plot_path, recursive = TRUE)
   
-  missing.genes = c()
-  for(g in gene.list){
-    if(!g %in% rownames(data)){
-      missing.genes = c(g, missing.genes)
+  missing_genes = c()
+  for(g in gene_list){
+    if(!g %in% rownames(seurat_object)){
+      missing_genes = c(g, missing_genes)
       next
     }else{
       print(g)
-      pdf(paste0(plot.path, g, "_UMAP.pdf"), height = 5, width = 10)
-      plot(gridExtra::grid.arrange(grobs = c(list(DimPlot(data) +
+      pdf(paste0(plot_path, g, "_UMAP.pdf"), height = 5, width = 10)
+      plot(gridExtra::grid.arrange(grobs = c(list(DimPlot(seurat_object) +
                                                     ggtitle("Seurat clusters") +
                                                     theme(plot.title = element_text(hjust = 0.5))),
-                                             list(FeaturePlot(data, g))), ncol = 2))
+                                             list(FeaturePlot(seurat_object, g))), ncol = 2))
       dev.off()
     }
   }
-  cat('\nFollowing genes not expressed in dataset:', missing.genes, '\n\n')
-  # system(paste0("zip -rj ", dirname(plot.path), "/", basename(plot.path), ".zip ", plot.path))
-  # unlink(plot.path, recursive=TRUE, force=TRUE)
+  cat('\nFollowing genes not expressed in dataset:', missing_genes, '\n\n')
+
+  if(zip_files == TRUE){
+    system(paste0("zip -rj ", dirname(plot_path), "/", basename(plot_path), ".zip ", plot_path))
+    unlink(plot_path, recursive=TRUE, force=TRUE)
+  }
 }

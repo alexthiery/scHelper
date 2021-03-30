@@ -1,3 +1,15 @@
+#' Function for plotting heatmap from seurat 10x object
+#'
+#' col_order is a single element or a vector element. By default cells are ordered by the first element of the metadata variable.
+#' User can specify col_order as a vector, with cell order prioritised based on the order of the col_order variable.
+#'
+#' A custom_order can be provided, however if so the custom_order_column must also be specified.
+#'
+#' By default cells are coloured based on the default ggplot colours (to match seurat cluster colours).
+#' This behaviour can be changed by changing use_seurat_colours and colour_scheme (RColourBrewer)
+#'
+#' col_ann_order can be specified to change the order in which the column annotations appear on the heatmap
+#' 
 #' @export
 TenxPheatmap <- function(data, metadata, col_order = metadata, custom_order = NULL, custom_order_column = NULL, 
                           assay = "RNA", slot = "scale.data", selected_genes,
