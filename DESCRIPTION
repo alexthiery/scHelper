@@ -1,0 +1,14 @@
+Package: scHelper
+Title: R package containing helper functions for single cell analysis
+Version: 0.1
+Authors@R: 
+    person(given = "Alex",
+           family = "Thiery",
+           role = c("aut", "cre"),
+           email = "alex.thiery@crick.ac.uk")
+Description: R package containing helper functions for single cell analysis
+License: `use_mit_license()`
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
