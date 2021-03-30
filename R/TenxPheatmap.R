@@ -73,7 +73,7 @@ TenxPheatmap <- function(data, metadata, col_order = metadata, custom_order = NU
     # set colours ggplot default colours, as in Seurat::DimPlot
     ann_colours <- list()
     for(column in metadata){
-      ann_colours[[column]] <- setNames(ggplotColours(n = length(levels(data@meta.data[,column]))), levels(data@meta.data[,column]))
+      ann_colours[[column]] <- setNames(ggPlotColours(n = length(levels(data@meta.data[,column]))), levels(data@meta.data[,column]))
       
       # change levels of HM col so that heatmap annotations are in the same order as plotted
       ann_colours[[column]] <- ann_colours[[column]][match(levels(HM.col[[column]]), names(ann_colours[[column]]))]
