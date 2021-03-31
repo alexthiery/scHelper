@@ -21,7 +21,7 @@ ClusterDimplot <- function(seurat_object, group_by = 'seurat_clusters', clusters
   
   dat <- filter(seurat_object@meta.data, (!!sym(cluster_col)) %in% clusters)
   plots[['cluster_subset']] <- DimPlot(seurat_object, group.by = group_by, cells = rownames(dat), pt.size = pt.size, shuffle = shuffle, seed = seed,
-          cols = setNames(ggplotColours(n = length(levels(colours))), levels(colours))) + xlim(xlim) + ylim(ylim) + labs(title = 'cluster subset')
+          cols = setNames(ggPlotColours(n = length(levels(colours))), levels(colours))) + xlim(xlim) + ylim(ylim) + labs(title = 'cluster subset')
   
   do.call("grid.arrange", c(plots, nrow=nrow))
 }
