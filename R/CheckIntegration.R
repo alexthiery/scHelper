@@ -11,7 +11,7 @@
 #' @export
 CheckIntegration <- function(seurat_object, group_by = 'orig.ident', pt.size = 0.2, xlim = c(-15,15), ylim = c(-15,15), nrow = 1, shuffle = TRUE, seed = 123){
   plots = list()
-  plots[['all cells']] <- DimPlot(seurat_object, group_by = group_by, pt.size = 0.2, shuffle = shuffle, seed = seed) + xlim(xlim) + ylim(ylim) + labs(title = 'all cells')
+  plots[['all cells']] <- DimPlot(seurat_object, group.by = group_by, pt.size = 0.2, shuffle = shuffle, seed = seed) + xlim(xlim) + ylim(ylim) + labs(title = 'all cells')
   
   # set colours to the same as when plotting all cells
   colours <- factor(seurat_object[[group_by, drop = T]])
@@ -21,8 +21,8 @@ CheckIntegration <- function(seurat_object, group_by = 'orig.ident', pt.size = 0
   for(i in stages){
     dat <- filter(seurat_object@meta.data, grepl(pattern = i, orig.ident))
     if(length(unique(dat[[group_by]])) > 1){
-      plots[[i]] <- DimPlot(seurat_object, cells = rownames(dat), group_by = group_by, pt.size = 0.2, shuffle = shuffle, seed = seed,
-                            cols = setNames(ggplotColours(n = length(levels(colours))), levels(colours))) + xlim(xlim) + ylim(ylim) + labs(title = i)
+      plots[[i]] <- DimPlot(seurat_object, cells = rownames(dat), group.by = group_by, pt.size = 0.2, shuffle = shuffle, seed = seed,
+                            cols = setNames(ggPlotColours(n = length(levels(colours))), levels(colours))) + xlim(xlim) + ylim(ylim) + labs(title = i)
     }
   }
   do.call("grid.arrange", c(plots, nrow=nrow))
