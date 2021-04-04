@@ -9,7 +9,8 @@ QCPlot(
   group_by = "seurat_clusters",
   y_elements = c("nCount_RNA", "nFeature_RNA", "percent.mt"),
   y_lab = c("UMI Count", "Gene Count", "\% MT"),
-  x_lab = "Cluster ID"
+  x_lab = "Cluster ID",
+  plot_quantiles = FALSE
 )
 }
 \arguments{
@@ -22,6 +23,8 @@ QCPlot(
 \item{y_lab}{array of labels for y axis reflecting y_elements}
 
 \item{x_lab}{label for x axis}
+
+\item{plot_quantiles}{boolean for whether to plot horizontal quantile cutoff lines}
 }
 \value{
 QC plots
