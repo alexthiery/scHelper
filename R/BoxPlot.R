@@ -10,7 +10,7 @@
 #' @return ggplot object
 #' @export
 BoxPlot <- function(data, y_col, group_by, y_lab, x_lab){
-  ggplot(dat, aes(x = .data[[group_by]], y = .data[[y_col]], fill = .data[[group_by]])) +
+  ggplot(data, aes(x = .data[[group_by]], y = .data[[y_col]], fill = .data[[group_by]])) +
     geom_boxplot() +
     xlab(x_lab) +
     ylab(y_lab) +
