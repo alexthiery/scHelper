@@ -4,10 +4,10 @@
 \alias{BoxPlot}
 \title{Box Plot}
 \usage{
-BoxPlot(dat, y_col, group_by, y_lab, x_lab)
+BoxPlot(data, y_col, group_by, y_lab, x_lab)
 }
 \arguments{
-\item{dat}{df containing sample metadata (i.e. seurat@meta.data)}
+\item{data}{df containing sample metadata (i.e. seurat@meta.data)}
 
 \item{y_col}{dat column to place on y axis}
 

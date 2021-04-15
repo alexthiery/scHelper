@@ -8,7 +8,7 @@
 #' @param intersect_metrics boolean value for whether to intersect the outliers for each metric
 #' @return array of clusters which are outliers
 #' @export
-IdentifyOutliers <- function(dat, group_by, metrics, intersect_metrics = FALSE){
+IdentifyOutliers <- function(dat, group_by = 'seurat_clusters', metrics, intersect_metrics = FALSE){
   outlier <- list()
   for(metric in metrics){
     min = quantile(dat[[metric]])[[2]]

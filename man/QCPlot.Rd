@@ -8,6 +8,7 @@ QCPlot(
   seurat_obj,
   group_by = "seurat_clusters",
   y_elements = c("nCount_RNA", "nFeature_RNA", "percent.mt"),
+  stage = "orig.ident",
   y_lab = c("UMI Count", "Gene Count", "\% MT"),
   x_lab = "Cluster ID",
   plot_quantiles = FALSE
@@ -19,6 +20,8 @@ QCPlot(
 \item{group_by}{seurat_obj@meta.data column to group cells by on x axis}
 
 \item{y_elements}{seurat_obj@meta.data column to plot QC metrics for}
+
+\item{stage}{seurat_obj@meta.data column to stack cell count bars by}
 
 \item{y_lab}{array of labels for y axis reflecting y_elements}
 
