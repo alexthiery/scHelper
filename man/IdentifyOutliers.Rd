@@ -4,7 +4,12 @@
 \alias{IdentifyOutliers}
 \title{Identify oulier clusters}
 \usage{
-IdentifyOutliers(dat, group_by, metrics, intersect_metrics = FALSE)
+IdentifyOutliers(
+  dat,
+  group_by = "seurat_clusters",
+  metrics,
+  intersect_metrics = FALSE
+)
 }
 \arguments{
 \item{dat}{df containing sample metadata (i.e. seurat@meta.data)}
