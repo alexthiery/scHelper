@@ -1,25 +1,41 @@
 #' Identify oulier clusters
 #'
-#' This function identifies clusters of cells based on QC metrics of interest. Groups are classed as outliers if the median for a given metric falls outside quartiles 1 and 3.
+#' This function identifies clusters of cells based on QC metrics of interest. Groups are classed as outliers if the median for a given metric falls outside the provided quantiles.
 #'
-#' @param dat df containing sample metadata (i.e. seurat@meta.data)
+#' @param seurat_obj Seurat object
 #' @param group_by column to group cells by
 #' @param metrics array of metrics to test for outliers
 #' @param intersect_metrics boolean value for whether to intersect the outliers for each metric
+#' @param quantiles Percent quantiles to plot on bar plots. Must be an array (length 2) with lower and upper percent quantiles
 #' @return array of clusters which are outliers
 #' @export
-IdentifyOutliers <- function(dat, group_by = 'seurat_clusters', metrics, intersect_metrics = FALSE){
+IdentifyOutliers <- function(seurat_obj, group_by = 'seurat_clusters', metrics, intersect_metrics = TRUE, quantiles){
   outlier <- list()
+  if(!length(quantiles) == 2){
+    stop('quantiles must be an array of length == 2')
+  }
   for(metric in metrics){
-    min = quantile(dat[[metric]])[[2]]
-    max = quantile(dat[[metric]])[[4]]
+    min = quantile(seurat_obj@meta.data[[metric]], probs = quantiles[1])
+    max = quantile(seurat_obj@meta.data[[metric]], probs = quantiles[2])
     
-    outlier[[metric]] <- dat %>%
+    outlier[[metric]] <- seurat_obj@meta.data %>%
       group_by((!!as.symbol(group_by))) %>%
       summarise(median = median((!!as.symbol(metric)))) %>%
       filter(median > max | median < min) %>%
       pull(!!as.symbol(group_by))
   }
   
-  ifelse(intersect_metrics, return(Reduce(intersect, outlier)), return(as.character(unique(unlist(outlier)))))
+  if(intersect_metrics){
+    if(length(Reduce(intersect, outlier)) == 0){
+      cat('No outliers detected!')
+    } else {
+      return(Reduce(intersect, outlier))
+    }
+  } else{
+    if(length(as.character(unique(unlist(outlier)))) == 0){
+      cat('No outliers detected!')
+    } else {
+      return(as.character(unique(unlist(outlier))))
+    }
+  }
 }
