@@ -2,10 +2,10 @@
 % Please edit documentation in R/GeneModulePheatmap.R
 \name{GeneModulePheatmap}
 \alias{GeneModulePheatmap}
-\title{Function for plotting gene module heatmap from seurat 10x object}
+\title{Function for plotting gene module pheatmap from Seurat object}
 \usage{
 GeneModulePheatmap(
-  data,
+  seurat_obj,
   metadata,
   col_order = metadata[1],
   custom_order = NULL,
@@ -14,34 +14,72 @@ GeneModulePheatmap(
   slot = "scale.data",
   gene_modules,
   selected_genes = NULL,
-  main = "",
   hide_annotation = NULL,
-  show_rownames = TRUE,
-  annotation_colors = NA,
-  hclust_rows = FALSE,
-  hclust_cols = FALSE,
   gaps_row = TRUE,
   gaps_col = NULL,
   gm_row_annotation = TRUE,
   cell_subset = NULL,
-  treeheight_row = 0,
   use_seurat_colours = TRUE,
   colour_scheme = c("PRGn", "RdYlBu", "Greys"),
   col_ann_order = rev(metadata),
+  show_colnames = FALSE,
+  show_rownames = TRUE,
+  cluster_rows = FALSE,
+  cluster_cols = FALSE,
+  annotation_names_row = FALSE,
   ...
 )
 }
-\description{
-col_order is a single element or a vector element. By default cells are ordered by the first element of the metadata variable.
-User can specify col_order as a vector, with cell order prioritised based on the order of the col_order variable.
+\arguments{
+\item{seurat_obj}{Seurat object}
+
+\item{metadata}{a string or array of colnames in seurat_obj@meta.data used to annotate the cells.}
+
+\item{col_order}{cell order will be prioritised by the order of elements in the array. By default cells are ordered by the first element of the metadata variable.}
+
+\item{custom_order}{array specifying cell group ordering. If set then custom_order_column must also be set.}
+
+\item{custom_order_column}{metadata column from which custom_order is derived.}
+
+\item{assay}{seurat assay to use for plotting.}
+
+\item{slot}{seurat slot to use for plotting.}
+
+\item{gene_modules}{list of gene modules to plot.}
+
+\item{selected_genes}{optional array of genes to filter gene modules. Modules with no selected_genes present will be removed.}
+
+\item{hide_annotation}{array of elements to hide from column annotation.}
+
+\item{gaps_row}{boolean specifying whether to add whitespace between gene modules.}
+
+\item{gaps_col}{metadata column by which to add whitespace.}
+
+\item{gm_row_annotation}{boolean specifying whether to add gene module row annotations.}
+
+\item{cell_subset}{array of cells to subset for plotting. If specified, data will be re-scaled.}
+
+\item{use_seurat_colours}{boolean specifying whether to use default seurat colours. If FALSE, colours from colour_scheme will be used instead.}
+
+\item{colour_scheme}{array or colour schemes from RColourBrewer to be used for annotating columns.}
+
+\item{col_ann_order}{can be specified to change the order of the column annotations.}
+
+\item{show_colnames}{default parameter passed to pheatmap.}
+
+\item{show_rownames}{default parameter passed to pheatmap.}
+
+\item{cluster_rows}{default parameter passed to pheatmap.}
+
+\item{cluster_cols}{default parameter passed to pheatmap.}
+
+\item{annotation_names_row}{default parameter passed to pheatmap.}
+
+\item{...}{Extra arguments to be passed to pheatmap.}
 }
-\details{
-A custom_order can be provided, however if so the custom_order_column must also be specified.
-
-By default cells are coloured based on the default ggplot colours (to match seurat cluster colours).
-This behaviour can be changed by changing use_seurat_colours and colour_scheme (RColourBrewer)
-
-A list of gene modules must be provided - this can be filtered by a set of selected_genes if desired
-
+\value{
+plot output from pheatmap.
+}
+\description{
 col_ann_order can be specified to change the order in which the column annotations appear on the heatmap
 }

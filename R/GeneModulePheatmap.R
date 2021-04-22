@@ -1,134 +1,137 @@
-#' Function for plotting gene module heatmap from seurat 10x object
-#'
-#' col_order is a single element or a vector element. By default cells are ordered by the first element of the metadata variable.
-#' User can specify col_order as a vector, with cell order prioritised based on the order of the col_order variable.
-#'
-#' A custom_order can be provided, however if so the custom_order_column must also be specified.
-#'
-#' By default cells are coloured based on the default ggplot colours (to match seurat cluster colours).
-#' This behaviour can be changed by changing use_seurat_colours and colour_scheme (RColourBrewer)
-#'
-#' A list of gene modules must be provided - this can be filtered by a set of selected_genes if desired
+#' Function for plotting gene module pheatmap from Seurat object
 #'
 #' col_ann_order can be specified to change the order in which the column annotations appear on the heatmap
+#' @param seurat_obj Seurat object
+#' @param metadata a string or array of colnames in seurat_obj@meta.data used to annotate the cells.
+#' @param col_order cell order will be prioritised by the order of elements in the array. By default cells are ordered by the first element of the metadata variable.
+#' @param custom_order array specifying cell group ordering. If set then custom_order_column must also be set.
+#' @param custom_order_column metadata column from which custom_order is derived.
+#' @param assay seurat assay to use for plotting.
+#' @param slot seurat slot to use for plotting.
+#' @param gene_modules list of gene modules to plot.
+#' @param selected_genes optional array of genes to filter gene modules. Modules with no selected_genes present will be removed.
+#' @param hide_annotation array of elements to hide from column annotation.
+#' @param gaps_row boolean specifying whether to add whitespace between gene modules.
+#' @param gaps_col metadata column by which to add whitespace.
+#' @param gm_row_annotation boolean specifying whether to add gene module row annotations.
+#' @param cell_subset array of cells to subset for plotting. If specified, data will be re-scaled.
+#' @param use_seurat_colours boolean specifying whether to use default seurat colours. If FALSE, colours from colour_scheme will be used instead.
+#' @param colour_scheme array or colour schemes from RColourBrewer to be used for annotating columns.
+#' @param col_ann_order can be specified to change the order of the column annotations.
+#' @param show_colnames default parameter passed to pheatmap.
+#' @param show_rownames default parameter passed to pheatmap.
+#' @param cluster_rows default parameter passed to pheatmap.
+#' @param cluster_cols default parameter passed to pheatmap.
+#' @param annotation_names_row default parameter passed to pheatmap.
+#' @param ... Extra arguments to be passed to pheatmap.
+#' @return plot output from pheatmap.
 #' @export
-GeneModulePheatmap <- function(data, metadata, col_order = metadata[1], custom_order = NULL, custom_order_column = NULL, assay = "RNA", slot = "scale.data",
-                    gene_modules, selected_genes = NULL, main = '', hide_annotation = NULL, show_rownames = TRUE, annotation_colors = NA,
-                    hclust_rows = FALSE, hclust_cols = FALSE, gaps_row = TRUE, gaps_col = NULL, gm_row_annotation = TRUE, cell_subset = NULL,
-                    treeheight_row = 0, use_seurat_colours = TRUE,  colour_scheme = c("PRGn", "RdYlBu", "Greys"),
-                    col_ann_order = rev(metadata), ...){
-  
-  # subset data based on vector of cell names
-  if(!is.null(cell_subset)){
-    data <- subset(data, cells = cell_subset)
-  } else {}
-  
-  
-  # reset levels in seurat_clusters metadata to default numerical order as default
-  if("seurat_clusters" %in% metadata){
-    data@meta.data[,"seurat_clusters"] <-  factor(data@meta.data[,"seurat_clusters"], levels = sort(unique(as.numeric(as.character(data@meta.data[,"seurat_clusters"])))))
-  } else {}
-  
-  # initialise heatmap metadata
-  HM.col <- droplevels(data@meta.data[, metadata, drop=FALSE])
-  
-  # order HM metadata based on col_order variable
-  HM.col <- HM.col[do.call('order', c(HM.col[col_order], list(decreasing=FALSE))), , drop = FALSE]
-  
-  # order HM metadata based on custom order
-  if(!is.null(custom_order)){
-    if(is.null(custom_order_column)){
-      "custom_order column must be specified \n"
-    } else {}
-    if(!setequal(custom_order, unique(HM.col[[custom_order_column]]))){
-      stop("custom_order factors missing from custom_order_column \n\n")
-    } else {}
-    HM.col[[custom_order_column]] <-  factor(HM.col[[custom_order_column]], levels = custom_order)
-    HM.col <- HM.col[order(HM.col[[custom_order_column]]),,drop = FALSE]  
+GeneModulePheatmap <- function (seurat_obj, metadata, col_order = metadata[1], custom_order = NULL, 
+                     custom_order_column = NULL, assay = "RNA", slot = "scale.data", 
+                     gene_modules, selected_genes = NULL, hide_annotation = NULL, 
+                     gaps_row = TRUE, gaps_col = NULL, gm_row_annotation = TRUE, 
+                     cell_subset = NULL, use_seurat_colours = TRUE, 
+                     colour_scheme = c("PRGn", "RdYlBu", "Greys"), col_ann_order = rev(metadata),
+                     show_colnames = FALSE, show_rownames = TRUE, cluster_rows = FALSE, cluster_cols = FALSE,
+                     annotation_names_row = FALSE, ...) 
+{
+  # Subset cells if necessary
+  if (!is.null(cell_subset)) {
+    seurat_obj <- subset(seurat_obj, cells = cell_subset)
   }
   
-  # subset gene modules by selected gene list if desired
-  if(!is.null(selected_genes)){
-    selected_GM <- subset.gm(gm = gene_modules, selected_genes = selected_genes)
+  ### Column formatting ###
+  
+  # Select metadata columns and convert to factor if character
+  seurat_obj@meta.data <- seurat_obj@meta.data[,metadata] %>% mutate_if(is.character, as.factor)
+  # Drop all unused levels
+  seurat_obj@meta.data[] <- lapply(seurat_obj@meta.data, function(x) if(is.factor(x)) factor(x) else x)
+  
+  # Set col_ann
+  col_ann <- seurat_obj@meta.data
+  
+  # Order cells based on col_order
+  col_ann <- col_ann[do.call("order", c(col_ann[col_order], list(decreasing = FALSE))), , drop = FALSE]
+  
+  # Order cells based on custom_order
+  if (!is.null(custom_order)) {
+    if (is.null(custom_order_column)) {
+      "custom_order column must be specified \n"
+    }
+    if (!setequal(custom_order, unique(col_ann[[custom_order_column]]))) {
+      stop("custom_order factors missing from custom_order_column \n\n")
+    }
+    levels(col_ann[[custom_order_column]]) <- custom_order
+    col_ann <- col_ann[order(col_ann[[custom_order_column]]), , drop = FALSE]
+  }
+  
+  # Insert whitespace between columns
+  if (!is.null(gaps_col)) {
+    ifelse(class(gaps_col) != "character", stop("gaps_col must be a metadata column name"), gaps_col <- cumsum(rle(as.vector(col_ann[[gaps_col]]))[["lengths"]]))
+  }
+  
+  # Hide column annotations
+  if (!is.null(hide_annotation)) {
+    col_ann[, hide_annotation] <- NULL
+  }
+  
+  # Use seurat colours by default -> otherwise use colour scheme set in colour_scheme
+  if (use_seurat_colours == FALSE) {
+    ann_colours <- lapply(1:ncol(col_ann), function(x) setNames(colorRampPalette(brewer.pal(9,colour_scheme[x])[2:9])(length(unique(col_ann[, x]))), unique(col_ann[, x])))
   } else {
-    if(is.null(names(gene_modules))){
+    ann_colours <- lapply(colnames(col_ann), function(x) {
+      temp <- setNames(ggPlotColours(n = length(levels(col_ann[, x]))), levels(col_ann[, x]))
+      temp[match(levels(col_ann[[x]]), names(temp))]
+    })
+  }
+  
+  names(ann_colours) <- colnames(col_ann)
+  
+  ### Row formatting ###
+  
+  # Subset gene modules based on selected genes and rename if modules have no names
+  if (!is.null(selected_genes)) {
+    selected_GM <- SubsetGeneModules(gm = gene_modules, selected_genes = selected_genes)
+  } else {
+    if (is.null(names(gene_modules))) {
       names(gene_modules) <- paste0("GM:", 1:length(gene_modules))
-      selected_GM <- gene_modules
-    } else {}
+    }
     selected_GM <- gene_modules
   }
   
-  # gaps_col specifies a metadata column which column gaps are calculated from
-  if(!is.null(gaps_col)) {
-    if(class(gaps_col) != "character"){
-      stop("gaps_col must be a metadata column name")
-    } else {
-      gaps_col = cumsum(rle(as.vector(HM.col[[gaps_col]]))[["lengths"]])
-    }
+  # Set row annotations
+  if (gm_row_annotation == TRUE) {
+    row_ann <- stack(selected_GM) %>% rename("Gene Modules" = ind) %>% column_to_rownames('values')
   } else {
+    row_ann <- NA
   }
   
-  # hide as many annotations in metadata as desired with hide_annotation
-  if(!is.null(hide_annotation)){
-    HM.col[,hide_annotation] <- NULL
-  } else{}
-  
-  # add row annotations for GM
-  if(gm_row_annotation == TRUE) {
-    row_ann <- stack(selected_GM)
-    rownames(row_ann) <- row_ann$values
-    colnames(row_ann)[2] <- "Gene Modules"
-    row_ann$values <- NULL
-  } else {
-    row_ann = NA
-  }
-  
-  # gaps_row splits heatmap rows by gene modules
-  if(gaps_row == TRUE) {
+  # Insert whitespace between rows
+  if (gaps_row == TRUE) {
     row_ann <- droplevels(row_ann)
-    gaps_row = cumsum(summary(as.factor(row_ann[["Gene Modules"]]), maxsum = max(lengths(lapply(row_ann, unique)))))
+    gaps_row = cumsum(summary(row_ann[["Gene Modules"]], maxsum = max(lengths(lapply(row_ann, unique)))))
   } else {
     gaps_row = NULL
   }
   
-  
-  # Set HM annotation colours
-  if(use_seurat_colours == FALSE){
-    # set colours for metadata
-    ann_colours <- list()
-    for(tic in 1:ncol(HM.col)){
-      ann_colours[[colnames(HM.col[tic])]] <- setNames(colorRampPalette(brewer.pal(9, colour_scheme[tic])[2:9])(length(unique(HM.col[,tic]))),
-                                                       unique(HM.col[,tic]))
-    }
-  } else {
-    # set colours ggplot default colours, as in Seurat::DimPlot
-    ann_colours <- list()
-    for(column in colnames(HM.col)){
-      ann_colours[[column]] <- setNames(ggplotColours(n = length(levels(HM.col[,column]))), levels(droplevels(data@meta.data[, column])))
-      
-      # change levels of HM col so that heatmap annotations are in the same order as plotted
-      ann_colours[[column]] <- ann_colours[[column]][match(levels(HM.col[[column]]), names(ann_colours[[column]]))]
-    }
-  }
-  # asign colours for row annotations
-  ann_colours[["Gene Modules"]] <- setNames(colorRampPalette(brewer.pal(9, "Paired"))(length(unique(row_ann$`Gene Modules`))),
-                                            unique(row_ann$`Gene Modules`))
+  # Set row annotation colours
+  ann_colours[["Gene Modules"]] <- setNames(colorRampPalette(brewer.pal(9, "Paired"))(length(unique(row_ann[['Gene Modules']]))), unique(row_ann[['Gene Modules']]))
   
   
-  # extract data to plot from seurat object
-  new.dat <- t(as.matrix(x = GetAssayData(object = data, assay = assay, slot = slot)[unlist(selected_GM), rownames(HM.col), drop = FALSE]))
-  if(!is.null(cell_subset)){
+  ### Prepare data ###
+  plot_data <- t(as.matrix(x = GetAssayData(object = seurat_obj, assay = assay, slot = slot)[unlist(selected_GM), rownames(col_ann), drop = FALSE]))
+  
+  # Scale data if cells have been subset
+  if (!is.null(cell_subset)) {
     cat("rescaling data as cells have been subset \n")
-    new.dat <- t(scale(t(new.dat)))
-  } else {}
-  # add limits to expression as in seurat heatmap plots
-  new.dat <- replace(new.dat, new.dat >= 2, 2)
-  new.dat <- replace(new.dat, new.dat <= -2, -2)
+    plot_data <- t(scale(t(plot_data)))
+  }
+
+  plot_data <- replace(plot_data, plot_data >= 2, 2)
+  plot_data <- replace(plot_data, plot_data <= -2, -2)
   
-  
-  # plot heatmap
-  print(pheatmap(t(new.dat), color = PurpleAndYellow(),
-                 cluster_rows = hclust_rows, cluster_cols = hclust_cols, show_colnames = FALSE,
-                 annotation_col = HM.col[,rev(col_ann_order), drop = FALSE], gaps_col = gaps_col,
-                 gaps_row = gaps_row, main = main, show_rownames = show_rownames, annotation_row = row_ann, annotation_colors = ann_colours, treeheight_row = treeheight_row, ...))
+  return(pheatmap(t(plot_data), color = PurpleAndYellow(),
+                 annotation_col = col_ann[, rev(col_ann_order), drop = FALSE], annotation_row = row_ann, annotation_colors = ann_colours,
+                 cluster_rows = cluster_rows, cluster_cols = cluster_cols, show_colnames = show_colnames, show_rownames = show_rownames, 
+                 gaps_col = gaps_col, gaps_row = gaps_row, annotation_names_row = annotation_names_row, ...))
 }
