@@ -6,31 +6,34 @@
 \usage{
 QCPlot(
   seurat_obj,
-  group_by = "seurat_clusters",
   y_elements = c("nCount_RNA", "nFeature_RNA", "percent.mt"),
-  stage = "orig.ident",
+  group_by = "seurat_clusters",
   y_lab = c("UMI Count", "Gene Count", "\% MT"),
   x_lab = "Cluster ID",
-  plot_quantiles = FALSE
+  stage = "orig.ident",
+  quantiles = c(0.25, 0.75),
+  ...
 )
 }
 \arguments{
 \item{seurat_obj}{Seurat object}
 
-\item{group_by}{seurat_obj@meta.data column to group cells by on x axis}
-
 \item{y_elements}{seurat_obj@meta.data column to plot QC metrics for}
 
-\item{stage}{seurat_obj@meta.data column to stack cell count bars by}
+\item{group_by}{seurat_obj@meta.data column to group cells by on x axis}
 
 \item{y_lab}{array of labels for y axis reflecting y_elements}
 
 \item{x_lab}{label for x axis}
 
-\item{plot_quantiles}{boolean for whether to plot horizontal quantile cutoff lines}
+\item{stage}{seurat_obj@meta.data column to stack cell count bars by}
+
+\item{quantiles}{Percent quantiles to plot on bar plots. Can be either NULL, a single element, or an array (length 2) with lower and upper percent}
+
+\item{...}{Extra arguments to be passed to grid.arrange}
 }
 \value{
-QC plots
+plot output from grid.arrange
 }
 \description{
 This function generates a series of box plots as quality control for a Seurat object
