@@ -43,7 +43,7 @@ GeneModulePheatmap <- function (seurat_obj, metadata, col_order = metadata[1], c
   ### Column formatting ###
   
   # Select metadata columns and convert to factor if character
-  seurat_obj@meta.data <- seurat_obj@meta.data[,metadata] %>% mutate_if(is.character, as.factor)
+  seurat_obj@meta.data <- seurat_obj@meta.data[,metadata, drop=FALSE] %>% mutate_if(is.character, as.factor)
   # Drop all unused levels
   seurat_obj@meta.data[] <- lapply(seurat_obj@meta.data, function(x) if(is.factor(x)) factor(x) else x)
   
