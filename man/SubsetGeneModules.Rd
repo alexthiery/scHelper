@@ -8,7 +8,7 @@ SubsetGeneModules(
   gms,
   selected_genes,
   keep_mod_ID = FALSE,
-  selected_gene_ratio = 0
+  selected_gene_proportion = 0
 )
 }
 \arguments{
@@ -18,7 +18,7 @@ SubsetGeneModules(
 
 \item{keep_mod_ID}{boolean value for whether to keep original gene module ID}
 
-\item{selected_gene_ratio}{ratio of selected genes which must be present in order for the module to be kept}
+\item{selected_gene_proportion}{ratio of selected genes which must be present in order for the module to be kept}
 }
 \description{
 Subset Antler gene modules based on selected gene list provided
