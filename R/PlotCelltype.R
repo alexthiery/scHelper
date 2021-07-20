@@ -1,4 +1,4 @@
-#' PlotContamination
+#' PlotCelltype
 #' 
 #' Calculate average expression for groups of genes across Seurat clusters and plot BoxPlots.
 #' 
@@ -10,7 +10,7 @@
 #' @param ... Extra arguments passed to grid.arrange
 #' @return plot output from grid.arrange
 #' @export
-PlotContamination <- function(seurat_obj, gene_list, group_by = 'seurat_clusters', x_lab = "Cluster ID", quantiles = c(0.05, 0.95), ...){
+PlotCelltype <- function(seurat_obj, gene_list, group_by = 'seurat_clusters', x_lab = "Cluster ID", quantiles = c(0.05, 0.95), ...){
   if(!all(names(gene_list) %in% colnames(seurat_obj@meta.data))){
     seurat_obj <- AverageGeneModules(seurat_obj = seurat_obj, gene_list = gene_list)
   }

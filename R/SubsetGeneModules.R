@@ -8,7 +8,7 @@
 SubsetGeneModules <- function(gms, selected_genes, keep_mod_ID = FALSE, selected_gene_proportion = 0) {
   outlist <- list()
   if(is.null(names(gms))){
-    names(gms) <- paste0("GM: ", 1:length(gms))
+    names(gms) <- paste0("GM", 1:length(gms))
   } else {}
   
   # this filters gene modules for which the percentage of differentially expressed genes passes a threshold test

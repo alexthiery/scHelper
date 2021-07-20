@@ -94,7 +94,7 @@ GeneModulePheatmap <- function (seurat_obj, metadata, col_order = metadata[1], c
     selected_GM <- SubsetGeneModules(gm = gene_modules, selected_genes = selected_genes)
   } else {
     if (is.null(names(gene_modules))) {
-      names(gene_modules) <- paste0("GM:", 1:length(gene_modules))
+      names(gene_modules) <- paste0("GM: ", 1:length(gene_modules))
     }
     selected_GM <- gene_modules
   }
