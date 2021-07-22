@@ -7,9 +7,12 @@
 ClusterClassification(
   seurat_obj,
   group_by = "seurat_clusters",
-  metrics,
+  cell_type_markers,
   quantile,
-  annotation_name = "scHelper_cell_type"
+  annotation_name = "scHelper_cell_type",
+  plot_path = "scHelper_log/",
+  fast = FALSE,
+  ...
 )
 }
 \arguments{
