@@ -5,13 +5,12 @@
 \title{ClusterClassification}
 \usage{
 ClusterClassification(
-  seurat_obj,
+  seurat_obj = seurat_data,
   group_by = "seurat_clusters",
-  cell_type_markers,
-  quantile,
+  cell_type_markers = cell_type_markers,
+  quantile = 0.8,
   annotation_name = "scHelper_cell_type",
   plot_path = "scHelper_log/",
-  fast = FALSE,
   ...
 )
 }
