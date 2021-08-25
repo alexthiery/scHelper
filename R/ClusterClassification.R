@@ -75,8 +75,9 @@ ClusterClassification <- function(seurat_obj = seurat_data, group_by = "seurat_c
       
       threshold_subset <- rbind(threshold_subset, below_threshold)
       
-    } else {
-      # remove assigned cells from seurat object in order to re-assign remaining cells
+    } 
+    # if not all cells are classified, remove assigned cells from seurat object in order to re-assign remaining cells
+    else if (!all(temp_seurat@meta.data[[group_by]] %in% threshold_subset[[group_by]])){
       temp_seurat <- subset(temp_seurat, subset = !!as.symbol(group_by) %in% threshold_subset[[group_by]], invert=TRUE)
       
       # If only one cluster remains - assign as cannot calculate percentile with only one group
@@ -92,6 +93,9 @@ ClusterClassification <- function(seurat_obj = seurat_data, group_by = "seurat_c
           dplyr::select(!!as.symbol(group_by), variable) %>%
           rbind(threshold_subset)
       }
+    } else {
+      iterate = FALSE
+      cat("All clusters classified!")
     }
     
     # iteratively add cluster assignments
