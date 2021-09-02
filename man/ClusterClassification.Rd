@@ -10,6 +10,7 @@ ClusterClassification(
   cell_type_markers = cell_type_markers,
   quantile = 0.8,
   annotation_name = "scHelper_cell_type",
+  force_assign = FALSE,
   plot_path = "scHelper_log/",
   ...
 )
@@ -22,6 +23,12 @@ ClusterClassification(
 \item{quantile}{Percent quantile to plot on bar plots. Must be a single value representing the upper percent quantile}
 
 \item{annotation_name}{Name of column to be annotated with corresponding cell types}
+
+\item{force_assign}{Boolean for whether to force assign cell identity to clusters which do not pass the filtering threshold}
+
+\item{plot_path}{Directory to plot log files}
+
+\item{...}{Additional options to be passed to grid.arrange}
 
 \item{cell_types}{column names for cell type module scores found in seurat_obj@meta.data}
 }

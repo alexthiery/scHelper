@@ -7,11 +7,14 @@
 #' @param cell_types column names for cell type module scores found in seurat_obj@meta.data
 #' @param quantile Percent quantile to plot on bar plots. Must be a single value representing the upper percent quantile
 #' @param annotation_name Name of column to be annotated with corresponding cell types
+#' @param force_assign Boolean for whether to force assign cell identity to clusters which do not pass the filtering threshold
+#' @param plot_path Directory to plot log files
+#' @param ... Additional options to be passed to grid.arrange
 #' @return array of clusters which are outliers
 #' @export
 
 ClusterClassification <- function(seurat_obj = seurat_data, group_by = "seurat_clusters", cell_type_markers = cell_type_markers, 
-                                  quantile = 0.8, annotation_name = "scHelper_cell_type", plot_path = "scHelper_log/", ...) 
+                                  quantile = 0.8, annotation_name = "scHelper_cell_type", force_assign = FALSE, plot_path = "scHelper_log/", ...) 
 {
   dir.create(plot_path, showWarnings = FALSE)
   
@@ -71,7 +74,14 @@ ClusterClassification <- function(seurat_obj = seurat_data, group_by = "seurat_c
         top_n(1, median_percentile) %>%
         dplyr::select(!!as.symbol(group_by), variable)
         
-      cat('The following clusters did not pass the percentile threshold. Clusters will be assigned to the cell type with the highest percentile. \nClusters:', as.character(unique(below_threshold[[group_by]])))
+      if(!force_assign){
+        below_threshold$variable <- NA
+        cat("The following clusters did not pass the percentile threshold. Clusters will be assigned N/A. \nClusters:", 
+            as.character(unique(below_threshold[[group_by]])))
+      } else {
+        cat("The following clusters did not pass the percentile threshold. Clusters will be assigned to the cell type with the highest percentile. \nClusters:", 
+            as.character(unique(below_threshold[[group_by]])))
+      }
       
       threshold_subset <- rbind(threshold_subset, below_threshold)
       
