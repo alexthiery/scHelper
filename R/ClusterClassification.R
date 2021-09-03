@@ -19,7 +19,7 @@ ClusterClassification <- function(seurat_obj = seurat_data, group_by = "seurat_c
   dir.create(plot_path, showWarnings = FALSE)
   
   if (!length(quantile) == 1) {
-    stop("quantile must be a single numeric value")
+    stop("\nquantile must be a single numeric value\n")
   }
 
   iterate = TRUE
@@ -76,11 +76,11 @@ ClusterClassification <- function(seurat_obj = seurat_data, group_by = "seurat_c
         
       if(!force_assign){
         below_threshold$variable <- NA
-        cat("The following clusters did not pass the percentile threshold. Clusters will be assigned N/A. \nClusters:", 
-            as.character(unique(below_threshold[[group_by]])))
+        cat("\nThe following clusters did not pass the percentile threshold. Clusters will be assigned N/A. \nClusters:", 
+            as.character(unique(below_threshold[[group_by]])), '\n')
       } else {
-        cat("The following clusters did not pass the percentile threshold. Clusters will be assigned to the cell type with the highest percentile. \nClusters:", 
-            as.character(unique(below_threshold[[group_by]])))
+        cat("\nThe following clusters did not pass the percentile threshold. Clusters will be assigned to the cell type with the highest percentile. \nClusters:", 
+            as.character(unique(below_threshold[[group_by]])), '\n')
       }
       
       threshold_subset <- rbind(threshold_subset, below_threshold)
@@ -95,7 +95,7 @@ ClusterClassification <- function(seurat_obj = seurat_data, group_by = "seurat_c
       
       if(length(unique(remaining_clusters[[group_by]])) == 1){
         iterate = FALSE
-        cat('The following clusters did not pass the percentile threshold. Clusters will be assigned to the cell type with the highest percentile. \nClusters:', as.character(unique(remaining_clusters[[group_by]])))
+        cat('\nThe following clusters did not pass the percentile threshold. Clusters will be assigned to the cell type with the highest percentile. \nClusters:', as.character(unique(remaining_clusters[[group_by]])), '\n')
         
         threshold_subset <- remaining_clusters %>%
           ungroup() %>%
@@ -105,7 +105,7 @@ ClusterClassification <- function(seurat_obj = seurat_data, group_by = "seurat_c
       }
     } else {
       iterate = FALSE
-      cat("All clusters classified!")
+      cat("\nAll clusters classified!\n")
     }
     
     # iteratively add cluster assignments
@@ -114,7 +114,23 @@ ClusterClassification <- function(seurat_obj = seurat_data, group_by = "seurat_c
   }
   
   if (nrow(cell_type_df) == 0) {
-    stop("No cell types detected!")
+    stop("\nNo cell types detected!\n")
+  }
+
+  # check if any clusters are annotated to multiple cell states (annotations share same percentile)
+  if(any(cell_type_df %>% count(seurat_clusters) %>% pull(n) > 1)){
+    duplicate_clusters <- cell_type_df %>%
+      count(seurat_clusters) %>%
+      filter(!n == 1) %>%
+      pull(seurat_clusters) %>%
+      as.character()
+    
+    cat("\nFollowing clusters are equally annotated to multiple cell states. Annotated cell states will be concatenated. \nClusters:", duplicate_clusters, "\n")
+    
+    cell_type_df <- cell_type_df %>%
+      group_by(seurat_clusters) %>%
+      mutate(variable = paste0(variable, collapse = "/")) %>%
+      distinct()
   }
   
   # add cell_type to seurat metadata
