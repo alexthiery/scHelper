@@ -9,6 +9,7 @@ ClusterClassification(
   group_by = "seurat_clusters",
   cell_type_markers = cell_type_markers,
   quantile = 0.8,
+  assay = "RNA",
   annotation_name = "scHelper_cell_type",
   force_assign = FALSE,
   plot_path = "scHelper_log/",

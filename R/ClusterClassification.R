@@ -14,9 +14,9 @@
 #' @export
 
 ClusterClassification <- function(seurat_obj = seurat_data, group_by = "seurat_clusters", cell_type_markers = cell_type_markers, 
-                                  quantile = 0.8, annotation_name = "scHelper_cell_type", force_assign = FALSE, plot_path = "scHelper_log/", ...) 
+                                  quantile = 0.8, assay = 'RNA', annotation_name = "scHelper_cell_type", force_assign = FALSE, plot_path = "scHelper_log/", ...) 
 {
-  dir.create(plot_path, showWarnings = FALSE)
+  dir.create(plot_path, recursive = TRUE, showWarnings = FALSE)
   
   if (!length(quantile) == 1) {
     stop("\nquantile must be a single numeric value\n")
@@ -25,7 +25,11 @@ ClusterClassification <- function(seurat_obj = seurat_data, group_by = "seurat_c
   iterate = TRUE
   iteration = 1
   metrics = names(cell_type_markers)
+
+  DefaultAssay(seurat_obj) <- assay
+
   temp_seurat <- seurat_obj
+
   cell_type_df = data.frame()
   
   while(iterate == TRUE){
@@ -125,10 +129,10 @@ ClusterClassification <- function(seurat_obj = seurat_data, group_by = "seurat_c
       
       cat("\nFollowing clusters are equally annotated to multiple cell states. Annotated cell states will be concatenated. \nClusters:", duplicate_clusters, "\n")
       
-      cell_type_df <- cell_type_df %>%
-        group_by(seurat_clusters) %>%
-        mutate(variable = paste0(variable, collapse = "/")) %>%
-        distinct()
+      cell_type_df = cell_type_df %>% group_by(seurat_clusters) %>% 
+        mutate(variable = paste0(variable, collapse = "/")) %>% 
+        distinct(!!as.symbol(group_by), variable, median_percentile)
+
     }
     
     # add cell_type to seurat metadata
