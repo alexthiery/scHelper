@@ -20,7 +20,7 @@ GMOrder <- function(seurat_obj = seurat_data, gene_modules = antler_data$gene_mo
 {
   classified_gms_1 <- GMClassification(seurat_obj = seurat_obj, gene_modules = gene_modules, group_by = metadata_1, plot_path = plot_path)
   
-  if(is.null(metadata_2)) {
+  if(is.null(metadata_2) | is.na(metadata_2) | is.nan(metadata_2)) {
     print(paste0("Gene modules ordered only on ", metadata_1))
     
     # order gene modules based on classification

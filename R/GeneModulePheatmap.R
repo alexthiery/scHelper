@@ -22,6 +22,7 @@
 #' @param show_rownames default parameter passed to pheatmap.
 #' @param cluster_rows default parameter passed to pheatmap.
 #' @param cluster_cols default parameter passed to pheatmap.
+#' @param order_genes boolean specifying whether to order genes within gms based on hclustering
 #' @param annotation_names_row default parameter passed to pheatmap.
 #' @param ... Extra arguments to be passed to pheatmap.
 #' @return plot output from pheatmap.
@@ -33,7 +34,7 @@ GeneModulePheatmap <- function (seurat_obj, metadata, col_order = metadata[1], c
                      cell_subset = NULL, use_seurat_colours = TRUE, 
                      colour_scheme = c("PRGn", "RdYlBu", "Greys"), col_ann_order = rev(metadata),
                      show_colnames = FALSE, show_rownames = TRUE, cluster_rows = FALSE, cluster_cols = FALSE,
-                     annotation_names_row = FALSE, ...) 
+                     order_genes = TRUE, annotation_names_row = FALSE, ...) 
 {
   # Subset cells if necessary
   if (!is.null(cell_subset)) {
@@ -116,6 +117,19 @@ GeneModulePheatmap <- function (seurat_obj, metadata, col_order = metadata[1], c
   
   # Set row annotation colours
   ann_colours[["Gene Modules"]] <- setNames(colorRampPalette(brewer.pal(9, "Paired"))(length(unique(row_ann[['Gene Modules']]))), unique(row_ann[['Gene Modules']]))
+  
+  # Order genes within gene modules
+  if (order_genes == TRUE) {
+    dir.create("scHelper_log/gene_hclustering/", recursive = TRUE, showWarnings = FALSE)
+    GMs_ordered_genes <- c()
+    for (i in names(selected_GM)){
+      mat <- GetAssayData(object = seurat_obj, assay = assay, slot = slot)
+      dist_mat <- dist(mat[selected_GM[[i]], ], method = 'euclidean')
+      hclust_avg <- hclust(dist_mat, method = 'average')
+      ordered_genes <- hclust_avg$labels[c(hclust_avg$order)]
+      GMs_ordered_genes[[i]] <- ordered_genes}
+    selected_GM <- GMs_ordered_genes
+  }
   
   
   ### Prepare data ###
