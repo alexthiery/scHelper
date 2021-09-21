@@ -120,14 +120,17 @@ GeneModulePheatmap <- function (seurat_obj, metadata, col_order = metadata[1], c
   
   # Order genes within gene modules
   if (order_genes == TRUE) {
+    dir.create("scHelper_log/gene_hclustering/", recursive = TRUE, showWarnings = FALSE)
     GMs_ordered_genes <- c()
     for (i in names(selected_GM)){
-      dist_mat <- dist(seurat_obj@assays$RNA@scale.data[selected_GM[[i]], ], method = 'euclidean')
+      mat <- GetAssayData(object = seurat_obj, assay = assay, slot = slot)
+      dist_mat <- dist(mat[selected_GM[[i]], ], method = 'euclidean')
       hclust_avg <- hclust(dist_mat, method = 'average')
       ordered_genes <- hclust_avg$labels[c(hclust_avg$order)]
       GMs_ordered_genes[[i]] <- ordered_genes}
     selected_GM <- GMs_ordered_genes
   }
+  
   
   ### Prepare data ###
   plot_data <- t(as.matrix(x = GetAssayData(object = seurat_obj, assay = assay, slot = slot)[unlist(selected_GM), rownames(col_ann), drop = FALSE]))
