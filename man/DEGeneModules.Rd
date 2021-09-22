@@ -22,6 +22,8 @@ DEGeneModules(
 
 \item{selected_gene_proportion}{proportion of genes in gene module which are required to pass differential expression test}
 
+\item{active_ident}{column in @meta.data which is to be used as the groupings for differential expression testing}
+
 \item{seurat_object}{Seurat object}
 }
 \value{

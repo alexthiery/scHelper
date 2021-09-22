@@ -5,6 +5,7 @@
 #' @param logfc logFC cutoff used for differential expression
 #' @param pval adjusted pvalue
 #' @param selected_gene_proportion proportion of genes in gene module which are required to pass differential expression test
+#' @param active_ident column in @meta.data which is to be used as the groupings for differential expression testing
 #' @return gene module list
 #' @export
 DEGeneModules <- function(seurat_data, gene_modules, logfc = 0.25, pval = 0.001, selected_gene_proportion = 0.5, active_ident = NULL){
