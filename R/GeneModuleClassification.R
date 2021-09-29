@@ -1,4 +1,4 @@
-#'#' GMClassification
+#'#' GeneModuleClassification
 #'
 #' This function retrieves gene module classifications using cell module score columns in seurat object.
 #'
@@ -11,7 +11,7 @@
 #' @return dataframe of gene modules and their classifications, unless publish_logs = FALSE
 #' @export
 
-GMClassification <- function(seurat_obj = seurat_data, gene_modules = antler_data$gene_modules$lists$unbiasedGMs_DE$content, 
+GeneModuleClassification <- function(seurat_obj = seurat_data, gene_modules = antler_data$gene_modules$lists$unbiasedGMs_DE$content, 
                              assay = 'RNA', plot_path = "scHelper_log/GM_classification/", group_by = "scHelper_cell_type", 
                              publish_logs = TRUE, rotated_labels = TRUE) 
 {
