@@ -15,9 +15,9 @@
 #' 
 
 GeneModuleOrder <- function(seurat_obj = seurat_data, gene_modules = antler_data$gene_modules$lists$unbiasedGMs_DE$content, 
-                    metadata_1 = NULL, order_1 = NULL,
-                    metadata_2 = NULL, order_2 = NULL,
-                    rename_modules = NULL, plot_path = "scHelper_log/GM_classification/") 
+                            metadata_1 = NULL, order_1 = NULL,
+                            metadata_2 = NULL, order_2 = NULL,
+                            rename_modules = NULL, plot_path = "scHelper_log/GM_classification/") 
 {
   classified_gms_1 <- GeneModuleClassification(seurat_obj = seurat_obj, gene_modules = gene_modules, group_by = metadata_1, plot_path = plot_path)
   
@@ -37,6 +37,7 @@ GeneModuleOrder <- function(seurat_obj = seurat_data, gene_modules = antler_data
     
     ordered_gms <- list()
     plots <- list()
+    classified_gms_2 <- data.frame()
     
     for (i in order_1){
       print(i)
@@ -57,7 +58,9 @@ GeneModuleOrder <- function(seurat_obj = seurat_data, gene_modules = antler_data
         
         # add ordered subset gms to whole list of ordered gms
         ordered_gms <- c(ordered_gms, ordered_gms_subset)
-    
+        
+        classified_gms_2 <- rbind(classified_gms_2, classified_gms)
+        
         # extract ggplots and add them to list
         plots <- c(plots, classified_gms_list[3:length(classified_gms_list)])
       }
@@ -66,7 +69,7 @@ GeneModuleOrder <- function(seurat_obj = seurat_data, gene_modules = antler_data
     png(paste0(plot_path, metadata_2, ".png"), width = 40, height = 30, units = "cm", res = 200)
     grid.arrange(grobs = plots)
     graphics.off()
-
+    
     if(!is.null(rename_modules)){
       if(rename_modules != metadata_1 && rename_modules != metadata_2){
         stop('rename_modules must be set as the value of metadata_1 or metadata_2')
@@ -75,17 +78,18 @@ GeneModuleOrder <- function(seurat_obj = seurat_data, gene_modules = antler_data
         classified_gms <- classified_gms_1
       } else {
         cat(paste('\nRenaming modules based on', metadata_2, 'classification\n\n'))
+        classified_gms <- classified_gms_2
       }
       
       # Order gms based on ordered_gms and replace names with metadata classification of interest
       names(ordered_gms) <- classified_gms %>%
-          arrange(match(gene_module, names(ordered_gms))) %>%
-          group_by(group_by) %>%
-          mutate(pos = 1:n()) %>%
-          mutate(group_by = paste(group_by, pos, sep = '-')) %>%
-          dplyr::pull(group_by)
+        arrange(match(gene_module, names(ordered_gms))) %>%
+        group_by(group_by) %>%
+        mutate(pos = 1:n()) %>%
+        mutate(group_by = paste(group_by, pos, sep = '-')) %>%
+        dplyr::pull(group_by)
     }
-
+    
     return(ordered_gms)
   }
 }
