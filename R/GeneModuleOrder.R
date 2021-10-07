@@ -35,9 +35,8 @@ GeneModuleOrder <- function(seurat_obj = seurat_data, gene_modules = antler_data
     # subset seurat object based on metadata_1
     temp_seurat <- SplitObject(seurat_obj, split.by = metadata_1)
     
-    ordered_gms <- list()
-    plots <- list()
     classified_gms_2 <- data.frame()
+    plots <- list()
     
     for (i in order_1){
       print(i)
@@ -57,13 +56,12 @@ GeneModuleOrder <- function(seurat_obj = seurat_data, gene_modules = antler_data
         ordered_gms_subset <- subset_gms[order(match(names(subset_gms), ordered_classified_gms$gene_module))]
         
         # add ordered subset gms to whole list of ordered gms
-        ordered_gms <- c(ordered_gms, ordered_gms_subset)
-        
-        classified_gms_2 <- rbind(classified_gms_2, classified_gms)
+        classified_gms_2 <- rbind(classified_gms_2, ordered_classified_gms)
         
         # extract ggplots and add them to list
         plots <- c(plots, classified_gms_list[3:length(classified_gms_list)])
       }
+      ordered_gms <- gene_modules[order(match(names(gene_modules), classified_gms_2$gene_module))]
     }
     
     png(paste0(plot_path, metadata_2, ".png"), width = 40, height = 30, units = "cm", res = 200)
@@ -83,10 +81,9 @@ GeneModuleOrder <- function(seurat_obj = seurat_data, gene_modules = antler_data
       
       # Order gms based on ordered_gms and replace names with metadata classification of interest
       names(ordered_gms) <- classified_gms %>%
-        arrange(match(gene_module, names(ordered_gms))) %>%
-        group_by(group_by) %>%
+        group_by(group_by) %>% 
         mutate(pos = 1:n()) %>%
-        mutate(group_by = paste(group_by, pos, sep = '-')) %>%
+        mutate(group_by = paste(group_by, pos, sep = "-")) %>%
         dplyr::pull(group_by)
     }
     
