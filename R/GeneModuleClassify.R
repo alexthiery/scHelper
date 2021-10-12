@@ -1,4 +1,4 @@
-#'#' GMClassify
+#'#' GeneModuleClassify
 #'
 #' This function retrieves gene module classifications using cell module score columns in seurat object.
 #'
