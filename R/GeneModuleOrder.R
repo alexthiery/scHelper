@@ -8,67 +8,60 @@
 #' @param order_1 vector specifying order of values from metadata_1
 #' @param metadata_2 cell metadata column on which to order gms, second ordering
 #' @param order_2 vector specifying order of values from metadata_2
+#' @param rename_modules can be 'metadata_1' or 'metadata_2', will rename gms based on one of those classifications
 #' @param plot_path Directory to plot log files from GMClassification
 #' @return list of gms ordered by expression levels in cells across metadata1 and 2
 #' @export
 #' 
 
-GMOrder <- function(seurat_obj = seurat_data, gene_modules = antler_data$gene_modules$lists$unbiasedGMs_DE$content, 
-                    metadata_1 = "stage", order_1 = c("hh4", "hh5", "hh6", "hh7", "ss4", "ss8"),
-                    metadata_2 = NULL, order_2 = NULL,
-                    plot_path = "scHelper_log/GM_classification/") 
-{
-  classified_gms_1 <- GMClassification(seurat_obj = seurat_obj, gene_modules = gene_modules, group_by = metadata_1, plot_path = plot_path)
+GeneModuleOrder <- function (seurat_obj = seurat_data, gene_modules = antler_data$gene_modules$lists$unbiasedGMs_DE$content, 
+                             metadata_1 = NULL, order_1 = NULL,
+                             metadata_2 = NULL, order_2 = NULL,
+                             rename_modules = NULL,
+                             plot_path = "scHelper_log/GM_classification/"){
   
-  if(is.null(metadata_2) | is.na(metadata_2) | is.nan(metadata_2)) {
+  ### Run classifications and use that to reorder - ROUND 1
+  classified_gms_1 <- GeneModuleClassify(seurat_obj, gene_modules, 
+                                         metadata = metadata_1, order = order_1,
+                                         rename_modules = TRUE,
+                                         plot_path = plot_path)
+  
+  ordered_gms <- gene_modules[order(match(names(gene_modules), classified_gms_1$name))]
+  
+  ### Run classifications and use that to reorder - ROUND 2
+  if (is.null(metadata_2) || is.na(metadata_2) || is.nan(metadata_2)) {
     print(paste0("Gene modules ordered only on ", metadata_1))
+  }else{
+    print(paste0("Gene modules ordered on ", metadata_1, 
+                 " AND ", metadata_2))
+    temp_seurat <- SplitObject(seurat_data, split.by = metadata_1)
+    classified_gms_2 <- c()
     
-    # order gene modules based on classification
-    class_order_gms <- order_1[order_1 %in% classified_gms_1$group_by]
-    ordered_classified_gms <- left_join(data.frame(group_by = class_order_gms), classified_gms_1, by = "group_by")
-    ordered_gms <- gene_modules[order(match(names(gene_modules), ordered_classified_gms$gene_module))]
-    
-    return(ordered_gms)
-    
-  } else {
-    print(paste0("Gene modules ordered on ", metadata_1, " AND ", metadata_2))
-    
-    # subset seurat object based on metadata_1
-    temp_seurat <- SplitObject(seurat_obj, split.by = metadata_1)
-    
-    ordered_gms <- list()
-    plots <- list()
-    
-    for (i in order_1){
+    for (i in order_1) {
       print(i)
+      subset_gms <- gene_modules[classified_gms_1 %>% filter(!!sym(metadata_1) == i) %>% dplyr::pull(name)]
       
-      # subset gms based on metadata_1
-      names_subset_gms <- classified_gms_1[classified_gms_1$group_by == i, "gene_module"]
-      subset_gms <- gene_modules[names_subset_gms$gene_module]
-      
-      if(length(subset_gms) != 0){
-        # reclassify gms on metadata_2
-        classified_gms_list <- GMClassification(seurat_obj = temp_seurat[[i]], gene_modules = subset_gms, group_by = metadata_2, plot_path = plot_path, publish_logs = FALSE)
+      if (length(subset_gms) != 0) {
+        temp <- GeneModuleClassify(seurat_data, subset_gms, 
+                                   metadata = metadata_2, order = order_2,
+                                   rename_modules = TRUE,
+                                   plot_path = paste0(plot_path, i, "/"))
         
-        # order gene modules based on classification - note different output from GMClassification as log files not published
-        classified_gms <- as.data.frame(c(classified_gms_list[1], classified_gms_list[2]))
-        class_order_gms <- order_2[order_2 %in% classified_gms$group_by]
-        ordered_classified_gms <- left_join(data.frame(group_by = class_order_gms), classified_gms, by = "group_by")
-        ordered_gms_subset <- subset_gms[order(match(names(subset_gms), ordered_classified_gms$gene_module))]
-        
-        # add ordered subset gms to whole list of ordered gms
-        ordered_gms <- c(ordered_gms, ordered_gms_subset)
-        
-        # extract ggplots and add them to list
-        plots <- c(plots, classified_gms_list[3:length(classified_gms_list)])
+        classified_gms_2 <- rbind(classified_gms_2, temp)
       }
     }
+    ordered_gms <- gene_modules[order(match(names(gene_modules), classified_gms_2$name))]
     
-    png(paste0(plot_path, metadata_2, ".png"), width = 40, height = 30, units = "cm", res = 200)
-    grid.arrange(grobs = plots)
-    graphics.off()
-    
-    return(ordered_gms)
+    ## Optional renaming
+    if (rename_modules == metadata_2){
+      names(ordered_gms) <- classified_gms_2$new_name
+    }
   }
   
+  ## Optional renaming
+  if (rename_modules == metadata_1){
+    names(ordered_gms) <- classified_gms_1$new_name
+  }
+  
+  return(ordered_gms)
 }
