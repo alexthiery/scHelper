@@ -14,7 +14,7 @@
 #' @export
 #' 
 
-GeneModuleOrder <- function (seurat_obj = seurat_data, gene_modules = antler_data$gene_modules$lists$unbiasedGMs_DE$content, 
+GeneModuleOrder <- function (seurat_obj, gene_modules, 
                              metadata_1 = NULL, order_1 = NULL,
                              metadata_2 = NULL, order_2 = NULL,
                              rename_modules = NULL,

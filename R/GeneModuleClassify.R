@@ -10,9 +10,8 @@
 #' @return ordered dataframe of gene modules and their classifications
 #' @export
 
-GeneModuleClassify <- function (seurat_obj = seurat_data, gene_modules = antler_data$gene_modules$lists$unbiasedGMs_DE$content, 
+GeneModuleClassify <- function (seurat_obj, gene_modules, 
                              metadata = NULL, order = NULL,
-                             rename_modules = FALSE,
                              plot_path = "scHelper_log/GM_classification/") 
 {
   # Classify and plot gms
