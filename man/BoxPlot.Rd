@@ -4,7 +4,7 @@
 \alias{BoxPlot}
 \title{Box Plot}
 \usage{
-BoxPlot(data, y_col, group_by, y_lab, x_lab)
+BoxPlot(data, y_col, group_by, y_lab, x_lab, rotated_labels = FALSE)
 }
 \arguments{
 \item{data}{df containing sample metadata (i.e. seurat@meta.data)}
@@ -16,6 +16,8 @@ BoxPlot(data, y_col, group_by, y_lab, x_lab)
 \item{y_lab}{label for y axis}
 
 \item{x_lab}{label for x axis}
+
+\item{rotated_labels}{boolean value to specify whether to rotate x axis labels}
 }
 \value{
 ggplot object

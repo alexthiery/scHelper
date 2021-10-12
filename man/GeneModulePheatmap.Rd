@@ -26,6 +26,7 @@ GeneModulePheatmap(
   show_rownames = TRUE,
   cluster_rows = FALSE,
   cluster_cols = FALSE,
+  order_genes = TRUE,
   annotation_names_row = FALSE,
   ...
 )
@@ -72,6 +73,8 @@ GeneModulePheatmap(
 \item{cluster_rows}{default parameter passed to pheatmap.}
 
 \item{cluster_cols}{default parameter passed to pheatmap.}
+
+\item{order_genes}{boolean specifying whether to order genes within gms based on hclustering}
 
 \item{annotation_names_row}{default parameter passed to pheatmap.}
 
