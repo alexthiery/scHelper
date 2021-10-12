@@ -5,8 +5,8 @@
 \title{#' GMOrder}
 \usage{
 GeneModuleOrder(
-  seurat_obj = seurat_data,
-  gene_modules = antler_data$gene_modules$lists$unbiasedGMs_DE$content,
+  seurat_obj,
+  gene_modules,
   metadata_1 = NULL,
   order_1 = NULL,
   metadata_2 = NULL,

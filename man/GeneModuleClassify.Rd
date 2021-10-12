@@ -2,14 +2,13 @@
 % Please edit documentation in R/GeneModuleClassify.R
 \name{GeneModuleClassify}
 \alias{GeneModuleClassify}
-\title{#' GMClassify}
+\title{#' GeneModuleClassify}
 \usage{
 GeneModuleClassify(
-  seurat_obj = seurat_data,
-  gene_modules = antler_data$gene_modules$lists$unbiasedGMs_DE$content,
+  seurat_obj,
+  gene_modules,
   metadata = NULL,
   order = NULL,
-  rename_modules = FALSE,
   plot_path = "scHelper_log/GM_classification/"
 )
 }
