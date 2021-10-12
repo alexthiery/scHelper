@@ -130,7 +130,7 @@ ClusterClassification <- function(seurat_obj = seurat_data, group_by = "seurat_c
       cat("\nFollowing clusters are equally annotated to multiple cell states. Annotated cell states will be concatenated. \nClusters:", duplicate_clusters, "\n")
       
       cell_type_df = cell_type_df %>% group_by(seurat_clusters) %>% 
-        mutate(variable = paste0(variable, collapse = "/")) %>% 
+        mutate(variable = paste0(variable, collapse = "|")) %>% 
         distinct(!!as.symbol(group_by), variable, median_percentile)
 
     }
