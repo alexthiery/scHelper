@@ -5,8 +5,8 @@
 \title{#' GMOrder}
 \usage{
 GeneModuleOrder(
-  seurat_obj = seurat_data,
-  gene_modules = antler_data$gene_modules$lists$unbiasedGMs_DE$content,
+  seurat_obj,
+  gene_modules,
   metadata_1 = NULL,
   order_1 = NULL,
   metadata_2 = NULL,
@@ -28,13 +28,13 @@ GeneModuleOrder(
 
 \item{order_2}{vector specifying order of values from metadata_2}
 
-\item{rename_modules}{string corresponding to either metadata_1 or metadata_2. Gene modules will be renamed based on their classification along this metadata column.}
+\item{rename_modules}{can be 'metadata_1' or 'metadata_2', will rename gms based on one of those classifications}
 
-\item{plot_path}{Directory to plot log files from GeneModuleClassification}
+\item{plot_path}{Directory to plot log files from GMClassification}
 }
 \value{
 list of gms ordered by expression levels in cells across metadata1 and 2
 }
 \description{
-This function uses GeneModuleClassification to order GMs based on one or two cell metadata columns
+This function uses GMClassification to order GMs based on one or two cell metadata columns
 }
