@@ -8,31 +8,28 @@
 #' @return array of cluster IDs automatically ordered based on their composition
 #' @export
 OrderCellClusters = function(seurat_object, col_to_sort, sort_by){
-  
-  enquo_col_to_sort = enquo(col_to_sort)
-  enquo_sort_by = enquo(sort_by)
 
   # if there are any character cols in metadata convert to factor
   seurat_object@meta.data[sapply(seurat_object@meta.data, is.character)] <- lapply(seurat_object@meta.data[sapply(seurat_object@meta.data, is.character)], as.factor)
   
   dat <- seurat_object@meta.data %>%
-    group_by(!! enquo_sort_by) %>%
-    count(!! enquo_col_to_sort) %>%
-    arrange(!! enquo_col_to_sort) %>%
-    group_by(!! enquo_col_to_sort) %>%
+    group_by(!!as.symbol(sort_by)) %>%
+    count(!!as.symbol(col_to_sort)) %>%
+    arrange(!!as.symbol(col_to_sort)) %>%
+    group_by(!!as.symbol(col_to_sort)) %>%
     mutate(n = n/sum(n))
   
   
   top2 <- dat %>%
     top_n(n = 2) %>%
-    arrange(!! enquo_sort_by, desc(n)) %>%
+    arrange(!!as.symbol(sort_by), desc(n)) %>%
     filter(n > 0.1)
   
   
   top1 <- dat %>%
     top_n(n = 1) %>%
-    arrange(!! enquo_sort_by, desc(n)) %>%
-    distinct(!! enquo_col_to_sort, .keep_all = TRUE)
+    arrange(!!as.symbol(sort_by), desc(n)) %>%
+    distinct(!!as.symbol(col_to_sort), .keep_all = TRUE)
   
   sort_by = as.character(substitute(sort_by))
   col_to_sort = as.character(substitute(col_to_sort))
@@ -65,7 +62,7 @@ OrderCellClusters = function(seurat_object, col_to_sort, sort_by){
   top1$n = top1$n + (rev(order(levels(top1[[sort_by]])))[top1[[sort_by]]] * 2)
   
   top1 = top1 %>%
-    arrange(!! enquo_sort_by, desc(n))
+    arrange(!!as.symbol(sort_by), desc(n))
   
   return(top1[[col_to_sort]])
 }
