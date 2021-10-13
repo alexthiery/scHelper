@@ -36,5 +36,5 @@ GeneModuleOrder(
 list of gms ordered by expression levels in cells across metadata1 and 2
 }
 \description{
-This function uses GMClassification to order GMs based on one or two cell metadata columns
+This function uses GeneModuleClassification to order GMs based on one or two cell metadata columns
 }
