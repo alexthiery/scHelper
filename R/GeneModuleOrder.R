@@ -21,11 +21,17 @@ GeneModuleOrder <- function (seurat_obj, gene_modules,
                              plot_path = "scHelper_log/GM_classification/"){
   
   ### Run classifications and use that to reorder - ROUND 1
-  classified_gms_1 <- GeneModuleClassify(seurat_obj, gene_modules, 
-                                         metadata = metadata_1, order = order_1,
-                                         plot_path = plot_path)
-  
-  ordered_gms <- gene_modules[order(match(names(gene_modules), classified_gms_1$name))]
+  classified_gms_1 <- GeneModuleClassify(seurat_obj, gene_modules, metadata = metadata_1, plot_path = plot_path)
+
+  # Add new names of gms based on their classification and order modules
+  classified_gms_1 <- classified_gms_1 %>%
+    arrange(match(!!sym(metadata_1), order_1)) %>%
+    group_by(!!sym(metadata_1)) %>%
+    mutate(pos = 1:n()) %>%
+    mutate(new_name = paste(!!sym(metadata_1), pos, sep = "-")) %>%
+    dplyr::select(gene_module, !!sym(metadata_1), new_name)
+
+  ordered_gms <- gene_modules[order(match(names(gene_modules), classified_gms_1$gene_module))]
   
   ### Run classifications and use that to reorder - ROUND 2
   if (is.null(metadata_2) || is.na(metadata_2) || is.nan(metadata_2)) {
@@ -38,18 +44,22 @@ GeneModuleOrder <- function (seurat_obj, gene_modules,
     
     for (i in order_1) {
       print(i)
-      subset_gms <- gene_modules[classified_gms_1 %>% filter(!!sym(metadata_1) == i) %>% dplyr::pull(name)]
+      subset_gms <- gene_modules[classified_gms_1 %>% filter(!!sym(metadata_1) == i) %>% dplyr::pull(gene_module)]
       
       if (length(subset_gms) != 0) {
-        temp <- GeneModuleClassify(seurat_data, subset_gms, 
-                                   metadata = metadata_2, order = order_2,
-                                   plot_path = paste0(plot_path, i, "/"))
-        
+        temp <- GeneModuleClassify(seurat_data, subset_gms, metadata = metadata_2, plot_path = paste0(plot_path, i, "/"))
         classified_gms_2 <- rbind(classified_gms_2, temp)
       }
-      ordered_gms <- gene_modules[order(match(names(gene_modules), classified_gms_2$gene_module))]
     }
-    ordered_gms <- gene_modules[order(match(names(gene_modules), classified_gms_2$name))]
+    # Add new names of gms based on their classification and order modules
+    classified_gms_2 <- classified_gms_2 %>%
+      arrange(match(!!sym(metadata_2), order_2)) %>%
+      group_by(!!sym(metadata_2)) %>%
+      mutate(pos = 1:n()) %>%
+      mutate(new_name = paste(!!sym(metadata_2), pos, sep = "-")) %>%
+      dplyr::select(gene_module, !!sym(metadata_2), new_name)
+
+    ordered_gms <- gene_modules[order(match(names(gene_modules), classified_gms_2$gene_module))]
     
     ## Optional renaming
     if (!is.null(rename_modules) && rename_modules == metadata_2){
