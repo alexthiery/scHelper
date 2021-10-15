@@ -52,13 +52,13 @@ GeneModuleOrder <- function (seurat_obj, gene_modules,
     ordered_gms <- gene_modules[order(match(names(gene_modules), classified_gms_2$name))]
     
     ## Optional renaming
-    if (rename_modules == metadata_2){
+    if (!is.null(rename_modules) && rename_modules == metadata_2){
       names(ordered_gms) <- classified_gms_2$new_name
     }
   }
   
   ## Optional renaming
-  if (rename_modules == metadata_1){
+  if (!is.null(rename_modules) && rename_modules == metadata_1){
     names(ordered_gms) <- classified_gms_1$new_name
   }
   
