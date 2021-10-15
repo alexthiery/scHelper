@@ -23,7 +23,6 @@ GeneModuleOrder <- function (seurat_obj, gene_modules,
   ### Run classifications and use that to reorder - ROUND 1
   classified_gms_1 <- GeneModuleClassify(seurat_obj, gene_modules, 
                                          metadata = metadata_1, order = order_1,
-                                         rename_modules = TRUE,
                                          plot_path = plot_path)
   
   ordered_gms <- gene_modules[order(match(names(gene_modules), classified_gms_1$name))]
@@ -44,7 +43,6 @@ GeneModuleOrder <- function (seurat_obj, gene_modules,
       if (length(subset_gms) != 0) {
         temp <- GeneModuleClassify(seurat_data, subset_gms, 
                                    metadata = metadata_2, order = order_2,
-                                   rename_modules = TRUE,
                                    plot_path = paste0(plot_path, i, "/"))
         
         classified_gms_2 <- rbind(classified_gms_2, temp)
