@@ -31,9 +31,6 @@ OrderCellClusters = function(seurat_object, col_to_sort, sort_by){
     arrange(!!as.symbol(sort_by), desc(n)) %>%
     distinct(!!as.symbol(col_to_sort), .keep_all = TRUE)
   
-  sort_by = as.character(substitute(sort_by))
-  col_to_sort = as.character(substitute(col_to_sort))
-  
   for(i in 1:nrow(top1)){
     
     tempnext = unique(as.integer(top2[[sort_by]][as.character(top2[[sort_by]]) == as.character(top1[[sort_by]])[i]]) + 1)
