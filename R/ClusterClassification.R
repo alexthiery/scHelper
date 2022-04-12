@@ -44,7 +44,7 @@ ClusterClassification <- function(seurat_obj = seurat_data, group_by = "seurat_c
     
     # select clusters and cell type annotations which are higher than percentile threshold
     celltype_df = temp_seurat@meta.data %>%
-      dplyr::select(c(!!as.symbol(group_by), all_of(metrics))) %>%
+      dplyr::select(c(as.symbol(group_by), all_of(metrics))) %>%
       reshape2::melt() %>%
       mutate(variable = as.character(variable)) 
     
