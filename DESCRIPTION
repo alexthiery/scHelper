@@ -10,6 +10,7 @@ Description: scHelper is a library designed for single cell RNAseq analysis. Thi
 Date:       2022-04-12
 Type:       Package
 License:    `use_mit_license()`
+biocViews:
 Depends:    R (>= 4.0.0),
             Seurat (>= 4.0.5)
 Imports:    cowplot (>= 1.1.1),
