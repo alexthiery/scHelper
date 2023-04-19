@@ -31,7 +31,7 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-          repository: alexthiery/scHelper
+          repository: alexthiery/schelper
           path: containers/${{matrix.module-name}}
           dockerfile: containers/${{matrix.module-name}}/Dockerfile
           tags: ${{matrix.module-name}}-${{steps.ver.outputs.version}}
