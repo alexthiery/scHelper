@@ -2,3 +2,4 @@
 .local
 .config
 .Rhistory
+.DS_store
