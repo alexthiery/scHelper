@@ -1,4 +1,4 @@
-FROM  alexthiery/schelpr:base-0.2.7
+FROM  alexthiery/schelper:base-0.2.7
 
 LABEL authors="alex.thiery@crick.ac.uk" \
         description="Docker image containing requirements for schelpr"
