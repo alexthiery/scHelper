@@ -28,9 +28,15 @@ Imports:    cowplot (>= 1.1.1),
             ComplexHeatmap (>= 2.6.2),
             ArrayBin (== 0.2),
             heatmap.plus (== 1.3),
-            Antler
-Remotes:    github::juliendelile/Antler
-Suggests:   future
+            optparse,
+            future,
+            getopt,
+            Antler,
+            seurat-disk,
+            STACAS
+Remotes:    github::juliendelile/Antler,
+            mojaveazure/seurat-disk,
+            carmonalab/STACAS@1.1.0
 Encoding:   UTF-8
 LazyData:   true
 Roxygen:    list(markdown = TRUE)
