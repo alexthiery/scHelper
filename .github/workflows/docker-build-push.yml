@@ -4,20 +4,25 @@ name: docker-build-push
 on:
   push:
     branches: 
-      - master
+      - main
     paths: 
       - '**/Dockerfile'
 
 jobs:
   build-push-docker:
     runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 1
+      matrix:
+        docker-file: ["Dockerfile"]
+        module-name: ["base", "dependencies"]
 
     steps:
       - uses: actions/checkout@v2
       - name: Set version and tags
         id: ver
         run: |
-          VERSION=`cat container/VERSION`
+          VERSION=`cat containers/VERSION`
           echo "version: $VERSION"
           echo "::set-output name=version::$(echo $VERSION)"
         shell: bash
@@ -26,7 +31,7 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-          repository: alexthiery/schelper
-          path: container
-          dockerfile: container/Dockerfile
-          tags: latest,v${{steps.ver.outputs.version}}
+          repository: alexthiery/scHelpr
+          path: containers/${{matrix.module-name}}
+          dockerfile: containers/${{matrix.module-name}}/Dockerfile
+          tags: ${{matrix.module-name}}-${{steps.ver.outputs.version}}
