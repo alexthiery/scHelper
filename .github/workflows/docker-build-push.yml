@@ -15,7 +15,7 @@ jobs:
       max-parallel: 1
       matrix:
         docker-file: ["Dockerfile"]
-        module-name: ["base", "dependencies"]
+        module-name: ["base", "dependencies", "archr-schelper"]
 
     steps:
       - uses: actions/checkout@v2
