@@ -1,6 +1,6 @@
 Package: scHelper
 Title: R package containing helper functions for single cell analysis
-Version: 0.2.9
+Version: 0.3.0
 Authors@R: 
     person(given = "Alex",
            family = "Thiery",
