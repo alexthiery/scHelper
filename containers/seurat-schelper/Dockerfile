@@ -1,4 +1,4 @@
-FROM  alexthiery/10x-npb-seurat:2.8
+FROM  alexthiery/10x-npb-seurat:base-2.8
 
 LABEL authors="eva.hamrud@crick.ac.uk" \
       description="Docker image with 10x seurat packages and schelpr"
