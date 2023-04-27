@@ -1,4 +1,4 @@
-name: docker-build-push
+name: docker-build-push-archr
 #https://github.com/marketplace/actions/build-and-push-docker-images
 
 on:
