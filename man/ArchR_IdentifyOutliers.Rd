@@ -13,6 +13,8 @@ ArchR_IdentifyOutliers(
 )
 }
 \arguments{
+\item{ArchR}{ArchR object}
+
 \item{group_by}{column to group cells by}
 
 \item{metrics}{array of metrics to test for outliers}
@@ -20,8 +22,6 @@ ArchR_IdentifyOutliers(
 \item{intersect_metrics}{boolean value for whether to intersect the outliers for each metric}
 
 \item{quantiles}{Percent quantiles to plot on bar plots. Must be an array (length 2) with lower and upper percent quantiles}
-
-\item{ArcgR}{ArchR object}
 }
 \value{
 array of clusters which are outliers
