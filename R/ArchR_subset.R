@@ -12,7 +12,7 @@
 #' @param invert invert all groups
 #' @return subsetted ArchR object
 #' @export
-subset_ArchR <- function(ArchR, meta_col1, meta_col2, groups1, groups2, invert1, invert2, invert = FALSE){
+ArchR_Subset <- function(ArchR, meta_col1, meta_col2, groups1, groups2, invert1, invert2, invert = FALSE){
   
   print(paste0("Filtering on first meta_col: ", meta_col1))
   if (invert1 == FALSE){

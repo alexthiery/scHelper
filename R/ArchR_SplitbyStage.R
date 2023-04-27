@@ -5,7 +5,7 @@
 #' @param ArchR ArchR object
 #' @return list of ArchR objects, split by stage
 #' @export
-ArchR_split_by_stage <- function(ArchR){
+ArchR_SplitbyStage <- function(ArchR){
   split_names <- unique(ArchR$stage)
   split_ArchR <- c()
   for (i in split_names){

@@ -9,7 +9,7 @@
 #' @param group_name name of grouping to be used when extracting top n features
 #' @return means matrix for plotting
 #' @export
-ArchR_extract_ids <- function(seMarker, cutOff = "FDR <= 1 & Log2FC >= 0", top_n = TRUE, n = 10, group_name = "clusters") {
+ArchR_ExtractIds <- function(seMarker, cutOff = "FDR <= 1 & Log2FC >= 0", top_n = TRUE, n = 10, group_name = "clusters") {
   
   markerList <- getMarkers(seMarker, cutOff = cutOff) # extract features that pass threshold
   

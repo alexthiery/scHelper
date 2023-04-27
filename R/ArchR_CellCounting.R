@@ -9,7 +9,7 @@
 #' @param scHelper_cell_type_order order in which to return cell types
 #' @return table of cell counts, or plots table directly
 #' @export
-ArchR_cell_counting <- function(ArchR = ArchR, group1 = "clusters", group2 = "stage", print_table = TRUE, scHelper_cell_type_order = scHelper_cell_type_order) {
+ArchRCellCounting <- function(ArchR = ArchR, group1 = "clusters", group2 = "stage", print_table = TRUE, scHelper_cell_type_order = scHelper_cell_type_order) {
   
   group1_data <- getCellColData(ArchR, select = group1)[,1]
   group1_cell_counts <- as.data.frame(table(group1_data))

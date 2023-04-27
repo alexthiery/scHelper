@@ -7,7 +7,7 @@
 #' @param matrix_type which matrix to use ("GeneScoreMatrix" or "PeakMatrix")
 #' @return seMarker with unique_id column
 #' @export
-ArchR_add_unique_ids_to_se <- function(seMarker, ArchR, matrix_type) {
+ArchRAddUniqueIdsToSe <- function(seMarker, ArchR, matrix_type) {
   
   if (matrix_type == "PeakMatrix") {
     tmp_peaks = data.frame(ArchR@peakSet)

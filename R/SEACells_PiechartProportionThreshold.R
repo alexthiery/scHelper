@@ -6,7 +6,7 @@
 #' @param threshold threshold for proportion of cells coming from one label
 #' @return pie chart showing proportions of cells that pass threshold purity
 #' @export
-SEACells_piechart_proportion_threshold <- function(prop_table, threshold = 0.5){
+SEACells_PiechartProportionThreshold <- function(prop_table, threshold = 0.5){
   
   # filter cells to only include those that pass threshold
   passed_cells <- prop_table %>% filter(prop > threshold)
@@ -19,9 +19,5 @@ SEACells_piechart_proportion_threshold <- function(prop_table, threshold = 0.5){
   lbls <- c(paste0("Passed: ", passed_cells), paste0("Didn't pass: ", failed_cells))
   
   return(pie(slices, labels = lbls, main = paste0("Number of cells that passed threshold (", threshold, ") of label proportions")))
-  
-}
-
-  return(df)
   
 }

@@ -7,7 +7,7 @@
 #' @param group_by ArchR metadata to group by (e.g. "Sample")
 #' @return table of cell counts for each pseudoreplicate across groups
 #' @export
-ArchR_pseudoreplicate_counts <- function(ArchR = ArchR, pseudo_replicates, group_by = "Sample") {
+ArchR_PseudoreplicateCounts <- function(ArchR = ArchR, pseudo_replicates, group_by = "Sample") {
   
   unlisted <- unlist(pseudo_replicates, recursive=FALSE)
   print(paste0("Number of pseudoreplicates: ", length(unlisted)))

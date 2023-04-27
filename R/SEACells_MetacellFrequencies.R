@@ -8,7 +8,7 @@
 #' @param calc_proportions boolean as to whether to calculate proportions of metacells in each category
 #' @return dataframe of either frequency of metacells in each category or proportions of metacells in each category
 #' @export
-SEACells_calculate_metacell_frequencies <- function(seurat, metacell_slot = "SEACell", category = "stage", calc_proportions = FALSE){
+SEACells_MetacellFrequencies <- function(seurat, metacell_slot = "SEACell", category = "stage", calc_proportions = FALSE){
   
   df <- data.frame(FetchData(object = seurat, vars = c(metacell_slot, category)))
   colnames(df) <- c("Metacell", "Category")

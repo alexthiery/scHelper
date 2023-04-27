@@ -7,7 +7,7 @@
 #' @param feature_list which features to plot
 #' @return grid of featureplots
 #' @export
-ArchR_feature_plot_grid <- function(ArchR, matrix = "GeneScoreMatrix", feature_list) {
+ArchR_FeaturePlotGrid <- function(ArchR, matrix = "GeneScoreMatrix", feature_list) {
   p <- plotEmbedding(ArchR, colorBy = matrix, name = feature_list, 
                      plotAs = "points", size = 1.8, baseSize = 0, labelSize = 8, legendSize = 10)
   p2 <- lapply(p, function(x){

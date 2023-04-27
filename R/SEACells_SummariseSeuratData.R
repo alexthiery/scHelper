@@ -7,7 +7,7 @@
 #' @param category slot in seurat metadata by which to group cells for summarising, default is "SEACell"
 #' @return dataframe with summarised data across groupings
 #' @export
-SEACells_summarise_seurat_data <- function(seurat, data_slot = "counts", category = "SEACell"){
+SEACells_SummariseSeuratData <- function(seurat, data_slot = "counts", category = "SEACell"){
   
   # extract data into dataframe
   df <- GetAssayData(object = seurat, slot = data_slot)

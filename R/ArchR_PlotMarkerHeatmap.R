@@ -12,7 +12,7 @@
 #' @param cluster_rows boolean, whether to cluster rows
 #' @return Heatmap of marker features
 #' @export
-ArchR_marker_heatmap <- function(mat, pal = viridis::magma(100), 
+ArchR_PlotMarkerHeatmap <- function(mat, pal = viridis::magma(100), 
                            labelRows = FALSE, fontSizeRows = 12,
                            labelCols = TRUE, fontSizeCols = 12,
                            cluster_columns = TRUE, cluster_rows = TRUE) {

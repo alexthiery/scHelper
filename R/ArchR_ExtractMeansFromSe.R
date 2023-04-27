@@ -7,7 +7,7 @@
 #' @param scaleTo scale factor to multiply by
 #' @return means matrix for plotting
 #' @export
-ArchR_extract_means_from_se <- function(seMarker, Log2norm = TRUE, scaleTo = 10^4) {
+ArchR_ExtractMeansFromSe <- function(seMarker, Log2norm = TRUE, scaleTo = 10^4) {
   mat <- as.data.frame(SummarizedExperiment::assays(seMarker)[["Mean"]])
   rownames(mat) <- rowData(seMarker)$unique_id
 

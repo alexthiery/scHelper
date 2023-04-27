@@ -6,7 +6,7 @@
 #' @param dictionary dataframe with two columns: 'index' (single cell ID) and 'SEACell' (SEACell ID)
 #' @return dataframe with summarised gene counts which can be used to make a seurat object of SEACells
 #' @export
-SEACells_summarise_gene_score_matrix <- function(matrix, dictionary){
+SEACells_SummariseGeneScoreMatrix <- function(matrix, dictionary){
   
   # turn gene score matrix into numeric dataframe
   df <- as.data.frame(t(as.data.frame(matrix)))
