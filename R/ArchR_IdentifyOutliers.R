@@ -2,7 +2,7 @@
 #'
 #' This function identifies clusters of cells based on QC metrics of interest. Groups are classed as outliers if the median for a given metric falls outside the provided quantiles.
 #'
-#' @param ArcgR ArchR object
+#' @param ArchR ArchR object
 #' @param group_by column to group cells by
 #' @param metrics array of metrics to test for outliers
 #' @param intersect_metrics boolean value for whether to intersect the outliers for each metric
