@@ -1,4 +1,4 @@
-name: docker-build-push-archr
+name: docker-build-push-eva
 #https://github.com/marketplace/actions/build-and-push-docker-images
 
 on:
@@ -15,7 +15,7 @@ jobs:
       max-parallel: 1
       matrix:
         docker-file: ["Dockerfile"]
-        module-name: ["archr-schelper", "archr_macs2-schelper"]
+        module-name: ["archr_macs2-schelper", "seurat-schelper"]
 
     steps:
       - uses: actions/checkout@v2
