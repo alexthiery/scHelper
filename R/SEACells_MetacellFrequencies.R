@@ -21,8 +21,8 @@ SEACells_MetacellFrequencies <- function(seurat, metacell_slot = "SEACell", cate
     arrange(Metacell) %>% 
     mutate(count = as.numeric(count))
   
-  print(paste0("Number of metacells: ", length(unique(freq$Metacell))))
-  print(paste0("Number of categories: ", length(unique(freq$Category))))
+  print(paste0("Number of metacells: ", length(unique(df$Metacell))))
+  print(paste0("Number of categories: ", length(unique(df$Category))))
 
   if (calc_proportions){
 
