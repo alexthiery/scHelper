@@ -21,7 +21,7 @@ ArchR_PseudoreplicateCounts <- function(ArchR = ArchR, pseudo_replicates, group_
     ArchR_pseudo_replicate <- ArchR[cell_IDs, ]
     
     # add up contributions of each group to pseudoreplicates
-    group_cell_count <- as.data.frame(table(getCellColData(ArchR_pseudo_replicate, select = group_by))) %>%
+    group_cell_count <- as.data.frame(table(as.data.frame(getCellColData(ArchR_pseudo_replicate, select = group_by)))) %>%
       pivot_wider(names_from = Var1, values_from = Freq) %>% 
       add_column(pseudo_replicate_ID = group_name)
     group_cell_counts <- rbind.fill(group_cell_counts, group_cell_count)
