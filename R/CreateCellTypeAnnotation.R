@@ -1,4 +1,4 @@
-#' Function for prep data to plot peak module heatmap using Complex Heatmap
+#' Function to create cell type annotation for Complex peak module heatmap
 #'
 #' @param plot_data Made by PrepPeakModuleHeatmap function
 #' @param scHelper_cell_type_colors vector of colors for scHelper_cell_type annotation
