@@ -12,6 +12,7 @@ ExtractModuleContents <- function(modules_df, module_names){
   for (module_name in module_names){
     temp_ids <- sub(' ', '', as.character(as.vector(modules_df[rownames(modules_df) %in% module_name, ])) )
     temp_ids <- temp_ids[nzchar(temp_ids)]
+    temp_ids <- temp_ids[!is.na(temp_ids)]
     ids <- c(ids, temp_ids)
   }
   return(ids)
