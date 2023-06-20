@@ -4,7 +4,7 @@ LABEL authors="eva.hamrud@crick.ac.uk" \
       description="Docker image with 10x seurat packages, schelpr and shiny"
 
 # Install scHelper
-RUN   R -e "devtools::install_github('alexthiery/scHelper@v0.3.4', dependencies = TRUE)"
+RUN   R -e "devtools::install_github('alexthiery/scHelper@v0.3.5', dependencies = TRUE)"
 
 # Install shiny
 RUN   R -e "install.packages('shiny')" && \
