@@ -15,7 +15,7 @@ jobs:
       max-parallel: 1
       matrix:
         docker-file: ["Dockerfile"]
-        module-name: ["archr_macs2-schelper", "seurat-schelper"]
+        module-name: ["archr_macs2-schelper", "archr_macs2_seurat-schelper", "seurat-schelper"]
 
     steps:
       - uses: actions/checkout@v2
